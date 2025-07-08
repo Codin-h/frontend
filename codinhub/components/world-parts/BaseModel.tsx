@@ -1,58 +1,57 @@
 import {Vector3} from "three";
-import {AllowedRotation, Parts, Rules} from "@/components/world-parts/Util";
+import {Parts, Rotations} from "@/components/world-parts/Util";
+import {useGLTF} from "@react-three/drei";
+import {
+    RULES_BUILDINGS,
+    RULES_CORNERS,
+    RULES_JUNCTION,
+    RULES_ROADS,
+    RULES_TSPLIT
+} from "@/components/world-parts/Consts";
+import {Rules} from "@/components/world-parts/Rules";
 
-export default class BaseModel {
-    rules!: Rules;
+export class BaseModel {
     path!: string;
     name!: string;
-    rotate?: AllowedRotation;
+    rotate?: Rotations;
     position:Vector3;
-    type: Parts = Parts.BUILDINGS;
+    part: Parts = Parts.BUILDINGS;
 
-    constructor(rules: Rules, path: string, name: string,position:Vector3 = new Vector3(0,0,0), rotate: AllowedRotation = 0, type?:Parts) {
-        this.rules = rules;
+    constructor(path: string, name: string,position:Vector3 = new Vector3(0,0,0), rotate: Rotations = 0, part?:Parts) {
         this.path = path;
         this.rotate = rotate;
         this.position = position;
         this.name = name;
-        if (type !== undefined) {
-            this.type = type;
+        if (part !== undefined) {
+            this.part = part;
         }
     }
 
-    get effectiveRules(): Rules {
-        if (!this.rotate) return this.rules;
-        const steps = this.getRotationSteps(this.rotate);
-        return this.rotateRules(steps);
-    }
-
-    private getRotationSteps(z: AllowedRotation): number {
-        switch (z) {
-            case AllowedRotation.Zero: return 0;
-            case AllowedRotation.HalfPi: return 1;
-            case AllowedRotation.Pi: return 2;
-            case AllowedRotation.MinusHalfPi: return 3;
+     getRules():Rules {
+        switch (this.part) {
+        case Parts.BUILDINGS: return RULES_BUILDINGS;
+        case Parts.ROADS: return RULES_ROADS;
+        case Parts.CORNERS: return RULES_CORNERS;
+        case Parts.TSPLIT: return RULES_TSPLIT;
+        case Parts.JUNCTION: return RULES_JUNCTION;
+        default: return RULES_BUILDINGS;
         }
-    }
-
-    private rotateRules(steps: number): Rules {
-        if (steps === 0) return this.rules;
-
-        let rotated = this.rules;
-        for (let i = 0; i < steps; i++) {
-            rotated = this.rotate90CCW(rotated);
-        }
-        return rotated;
-    }
-
-    private rotate90CCW(rules: Rules): Rules {
-        return {
-            front: rules.right,
-            right: rules.back,
-            back: rules.left,
-            left: rules.front,
-            top: rules.top,
-            bottom: rules.bottom
-        };
-    }
+     }
 }
+
+export default function Model({ model }: { model: BaseModel }) {
+    console.log(model);
+    const {nodes, materials} = useGLTF(model.path);
+
+    return (
+        <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes[model.name].geometry}
+            material={materials.citybits_texture}
+            position={model.position}
+            rotation={[0, model.rotate ?? 0, 0]}
+        />
+    );
+}
+
