@@ -1,5 +1,5 @@
 import {Vector3} from "three";
-import {Parts, Rotations} from "@/components/world-parts/Util";
+import {Parts, Rotations,Rules} from "@/components/world-parts/Util";
 import {useGLTF} from "@react-three/drei";
 import {
     RULES_BUILDINGS,
@@ -8,7 +8,6 @@ import {
     RULES_ROADS,
     RULES_TSPLIT
 } from "@/components/world-parts/Consts";
-import {Rules} from "@/components/world-parts/Rules";
 
 export class BaseModel {
     path!: string;
@@ -54,4 +53,3 @@ export default function Model({ model }: { model: BaseModel }) {
         />
     );
 }
-

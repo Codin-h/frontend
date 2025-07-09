@@ -1,7 +1,6 @@
-import {Rotations, ModelTypes, Parts} from "@/components/world-parts/Util";
-import {Rules} from "@/components/world-parts/Rules";
+import {Rotations, ModelTypes, Parts, Rules} from "@/components/world-parts/Util";
 
-export const RULES_BUILDINGS:Rules = {
+export const RULES_BUILDINGS = {
     front: {
         [Parts.BUILDINGS]: [Rotations.Zero, Rotations.HalfPi, Rotations.Pi, Rotations.MinusHalfPi],
         [Parts.ROADS]: [Rotations.Zero, Rotations.Pi],
@@ -175,18 +174,45 @@ export const RULES_TSPLIT:Rules = {
 // }
 
 export const weights: Record<ModelTypes, number>  = {
-    [ModelTypes.BuildingA]: .9,
-    [ModelTypes.BuildingB]: .9,
-    [ModelTypes.BuildingC]: .9,
-    [ModelTypes.BuildingD]: .9,
-    [ModelTypes.BuildingE]: .9,
-    [ModelTypes.BuildingF]: .9,
-    [ModelTypes.BuildingG]: .9,
-    [ModelTypes.BuildingH]: .9,
-    [ModelTypes.RoadA]: .9,
-    [ModelTypes.RoadB]: .5,
+    [ModelTypes.BuildingA]: 1,
+    [ModelTypes.BuildingB]: .2,
+    [ModelTypes.BuildingC]: .1,
+    [ModelTypes.BuildingD]: .1,
+    [ModelTypes.BuildingE]: .1,
+    [ModelTypes.BuildingF]: .1,
+    [ModelTypes.BuildingG]: .1,
+    [ModelTypes.BuildingH]: .1,
+    [ModelTypes.RoadA]: 1,
+    [ModelTypes.RoadB]: .9,
     [ModelTypes.RoadCornerA]: 0.7,
     [ModelTypes.RoadCornerB]: 0.7,
     [ModelTypes.RoadJunction]: 0.5,
     [ModelTypes.RoadT]: 0.5
+}
+
+export const partToModelTypes: Record<Parts, ModelTypes[]> = {
+    [Parts.BUILDINGS]: [
+        ModelTypes.BuildingA, ModelTypes.BuildingB, ModelTypes.BuildingC, ModelTypes.BuildingD,
+        ModelTypes.BuildingE, ModelTypes.BuildingF, ModelTypes.BuildingG, ModelTypes.BuildingH
+    ],
+    [Parts.ROADS]: [
+        ModelTypes.RoadA, ModelTypes.RoadB
+    ],
+    [Parts.CORNERS]: [
+        ModelTypes.RoadCornerA, ModelTypes.RoadCornerB
+    ],
+    [Parts.JUNCTION]: [
+        ModelTypes.RoadJunction
+    ],
+    [Parts.TSPLIT]: [
+        ModelTypes.RoadT
+    ]
+};
+
+export const ALL_POSSIBLE_PARTS: Partial<Record<Parts, Rotations[]>> = {
+    [Parts.BUILDINGS]: [Rotations.Zero, Rotations.HalfPi, Rotations.Pi, Rotations.MinusHalfPi],
+    [Parts.ROADS]: [Rotations.Zero, Rotations.HalfPi, Rotations.Pi, Rotations.MinusHalfPi],
+    [Parts.CORNERS]: [Rotations.Zero, Rotations.HalfPi, Rotations.Pi, Rotations.MinusHalfPi],
+    [Parts.JUNCTION]: [Rotations.Zero, Rotations.HalfPi, Rotations.Pi, Rotations.MinusHalfPi],
+    [Parts.TSPLIT]: [Rotations.Zero, Rotations.HalfPi, Rotations.Pi, Rotations.MinusHalfPi],
 }

@@ -1,17 +1,33 @@
-// based on local position, they are negative
-import {Rotations, Parts} from "@/components/world-parts/Util";
+import {Rotations, Rules} from "@/components/world-parts/Util";
 import {BaseModel} from "@/components/world-parts/BaseModel";
+import {Vector3} from "three";
 
-export interface Rules {
-    front: Partial<Record<Parts, Rotations[]>>;
-    back: Partial<Record<Parts, Rotations[]>>;
-    left: Partial<Record<Parts, Rotations[]>>;
-    right: Partial<Record<Parts, Rotations[]>>;
-    top: null | Partial<Record<Parts, Rotations[]>>;
-    bottom: null | Partial<Record<Parts, Rotations[]>>;
+
+export default function getRulesBasedOnOrientation(model: BaseModel, coords:Vector3) {
+    const rules: Rules = getEffectiveRules(model);
+    const modelCoords: Vector3 = model.position;
+
+    const x = coords.x - modelCoords.x; // this would be x in the horizontal plane
+    const y = coords.y - modelCoords.y; // this would be "z" in the vertical plane
+    const z = coords.z - modelCoords.z; // this would be "y" in the horizontal plane
+
+    if (x > 0) {
+        return rules.right;
+    } else if (x < 0) {
+        return rules.left;
+    } else if (z > 0) {
+        return rules.front;
+    } else if (z < 0) {
+        return rules.back;
+    } else if (y > 0) {
+        return rules.top;
+    } else if (y < 0) {
+        return rules.bottom;
+    }
+
 }
 
-export function getEffectiveRules(model: BaseModel): Rules {
+function getEffectiveRules(model: BaseModel): Rules {
     const rules:Rules = model.getRules();
      if (!model.rotate) return rules;
      const steps = getRotationSteps(model.rotate);
