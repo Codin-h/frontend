@@ -1,13 +1,7 @@
 import {Vector3} from "three";
-import {Parts, Rotations,Rules} from "@/components/world-parts/Util";
+import {Parts, Rotations} from "@/components/world-parts/Util";
 import {useGLTF} from "@react-three/drei";
-import {
-    RULES_BUILDINGS,
-    RULES_CORNERS,
-    RULES_JUNCTION,
-    RULES_ROADS,
-    RULES_TSPLIT
-} from "@/components/world-parts/Consts";
+
 
 export class BaseModel {
     path!: string;
@@ -25,17 +19,6 @@ export class BaseModel {
             this.part = part;
         }
     }
-
-     getRules():Rules {
-        switch (this.part) {
-        case Parts.BUILDINGS: return RULES_BUILDINGS;
-        case Parts.ROADS: return RULES_ROADS;
-        case Parts.CORNERS: return RULES_CORNERS;
-        case Parts.TSPLIT: return RULES_TSPLIT;
-        case Parts.JUNCTION: return RULES_JUNCTION;
-        default: return RULES_BUILDINGS;
-        }
-     }
 }
 
 export default function Model({ model }: { model: BaseModel }) {
